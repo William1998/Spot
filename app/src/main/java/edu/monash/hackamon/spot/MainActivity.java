@@ -1,44 +1,39 @@
 package edu.monash.hackamon.spot;
 
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
+import android.content.pm.PackageManager;
+
 import android.support.v7.app.AppCompatActivity;
-import android.support.design.widget.TabLayout;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
-    private TabAdapter adapter;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
+    boolean hasGPS;
     TextView yourLocation;
-
     TextView libraryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(), "Tab 1");
-        adapter.addFragment(new Tab2Fragment(), "Tab 2");
-        adapter.addFragment(new Tab3Fragment(), "Tab 3");
-        adapter.addFragment(new Tab4Fragment(), "Tab 4");
-
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        PackageManager packageManager = this.getPackageManager();
+        hasGPS = packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
     }
+
+
 
     public void getYourLocation() {}
 
-    public void gotoLibrary(String libraryID) {
+    public void selectCampus(View view) {
 
-        startActivity(new Intent(this, LibraryInfo.class)
-                .putExtra("libraryID", libraryID));
+        TextView campus = (TextView) view;
+        Intent intent = new Intent(this, LibraryInfo.class);
+        intent.putExtra("campus", campus.getText().toString());
+
+        startActivity(intent);
     }
+
 }
